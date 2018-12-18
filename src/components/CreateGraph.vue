@@ -2,9 +2,9 @@
   <div>
     <h1>Create Graph</h1>
     <label for="username">username</label>
-    <input type="text" id="username" v-model="graphParams.username">
+    <input type="text" id="username" v-model="userParams.username">
     <label for="token">token</label>
-    <input type="text" id="token" v-model="graphParams.token">
+    <input type="text" id="token" v-model="userParams.token">
     <label for="id">id</label>
     <input type="text" id="id" v-model="graphParams.id">
     <label for="name">name</label>
@@ -24,10 +24,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import axios from 'axios';
 
-interface GraphParams {
+interface UserParams {
   username: string,
   token: string,
+}
+
+interface GraphParams {
   id: string,
   name: string,
   unit: string,
@@ -40,9 +44,13 @@ interface GraphParams {
 export default class CreateGraph extends Vue {
   @Prop() private msg!: string;
 
-  graphParams : GraphParams = {
+
+  userParams : UserParams = {
     username: '',
     token: '',
+  }
+
+  graphParams : GraphParams = {
     id: '',
     name: '',
     unit: '',
@@ -52,7 +60,21 @@ export default class CreateGraph extends Vue {
   };
 
   sendParams() {
-
+    axios.post(
+      `https://pixe.la/v1/users/${this.userParams.username}/graphs`, 
+      this.graphParams,
+      {
+        headers: {
+          'X-USER-TOKEN': this.userParams.token
+          }
+      }
+      )
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 }
 </script>
@@ -70,6 +92,7 @@ input {
   width: 100%;
   padding: 5px;
   margin-bottom: 15px;
+  border: 1px solid black;
 }
 
 button {
