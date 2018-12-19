@@ -24,65 +24,58 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import axios from 'axios';
 import ErrorMessages from "@/components/ErrorMessages.vue";
 
 interface UserParams {
-  username: string,
-  token: string,
+  username: string;
+  token: string;
 }
 
-class GraphParams {
+interface GraphParams {
   id: string;
   name: string;
   unit: string;
   type: string;
   color: string;
   timezone?: string;
-  errors: string[];
-
-  constructor(
-    id: string,
-    name: string,
-    unit: string,
-    type: string,
-    color: string,
-    timezone?: string
-  ) {
-    this.id = id;
-    this.name = name;
-    this.unit = unit;
-    this.type = type;
-    this.color = color;
-    this.timezone = timezone;
-    this.errors = [];
-  }
-
-  validate() {
-    this.errors = [];
-    if (!this.id) {
-      this.errors.push('id Required')
-    }
-    if (!this.name) {
-      this.errors.push('name Required')
-    }
-    if (!this.unit) {
-      this.errors.push('unit Required')
-    }
-    if (!this.type) {
-      this.errors.push('type Required')
-    }
-    if (!this.color) {
-      this.errors.push('color Required')
-    }
-    return this.errors.length == 0;
-  }
 }
 
 interface ApiResult {
   message: string,
   isSuccess: boolean,
+}
+
+class CreateGraphValidater {
+  errors: string[] = [];
+
+  validate(userParams: UserParams, graphParams: GraphParams) {
+    this.errors = [];
+    if (!userParams.username) {
+      this.errors.push('username Required')
+    }
+    if (!userParams.token) {
+      this.errors.push('token Required')
+    }
+
+    if (!graphParams.id) {
+      this.errors.push('id Required')
+    }
+    if (!graphParams.name) {
+      this.errors.push('name Required')
+    }
+    if (!graphParams.unit) {
+      this.errors.push('unit Required')
+    }
+    if (!graphParams.type) {
+      this.errors.push('type Required')
+    }
+    if (!graphParams.color) {
+      this.errors.push('color Required')
+    }
+    return this.errors.length == 0;
+  }
 }
 
 @Component({
@@ -91,17 +84,22 @@ interface ApiResult {
   }
 })
 export default class CreateGraph extends Vue {
-  @Prop() private msg!: string;
-
-  userParams : UserParams = {
-    username: '',
-    token: '',
-  };
-
-  graphParams : GraphParams = new GraphParams('','','','','','');
+  userParams : UserParams = { 
+    username:'',
+    token:'',
+    };
+  graphParams : GraphParams = {
+    id: '',
+    name: '',
+    unit: '',
+    type: '',
+    color: '',
+    timezone:'',
+    };
   
   apiResult : ApiResult | null = null;
   errors : string[] = [];
+  private createGraphValidater: CreateGraphValidater = new CreateGraphValidater();
 
   sendParams() {
     let errorHandler = (error: any) => {
@@ -109,9 +107,9 @@ export default class CreateGraph extends Vue {
       alert('Not Create Graph!');
     }
 
-    if(!this.graphParams.validate()) {
-      alert('Params');
-      this.errors = this.graphParams.errors
+    if(!this.createGraphValidater.validate(this.userParams, this.graphParams)) {
+      this.errors = this.createGraphValidater.errors
+      alert('Params Error');
       return;
     }
 
