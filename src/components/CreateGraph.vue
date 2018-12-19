@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Create Graph</h1>
+    <error-messages v-bind:errors="errors" />
     <label for="username">username</label>
     <input type="text" id="username" v-model="userParams.username">
     <label for="token">token</label>
@@ -18,48 +19,103 @@
     <label for="timezone">timezone</label>
     <input type="text" id="timezone" v-model="graphParams.timezone">
     <button type="button" @click="sendParams">Create</button>
-
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import axios from 'axios';
+import ErrorMessages from "@/components/ErrorMessages.vue";
 
 interface UserParams {
-  username: string,
-  token: string,
+  username: string;
+  token: string;
 }
 
 interface GraphParams {
-  id: string,
-  name: string,
-  unit: string,
-  type: string,
-  color: string,
-  timezone: string,
+  id: string;
+  name: string;
+  unit: string;
+  type: string;
+  color: string;
+  timezone?: string;
 }
 
-@Component
-export default class CreateGraph extends Vue {
-  @Prop() private msg!: string;
+interface ApiResult {
+  message: string,
+  isSuccess: boolean,
+}
 
+class CreateGraphValidater {
+  errors: string[] = [];
 
-  userParams : UserParams = {
-    username: '',
-    token: '',
+  validate(userParams: UserParams, graphParams: GraphParams) {
+    this.errors = [];
+    if (!userParams.username) {
+      this.errors.push('username Required')
+    }
+    if (!userParams.token) {
+      this.errors.push('token Required')
+    }
+
+    if (!graphParams.id) {
+      this.errors.push('id Required')
+    }
+    if (!graphParams.name) {
+      this.errors.push('name Required')
+    }
+    if (!graphParams.unit) {
+      this.errors.push('unit Required')
+    }
+    if (!graphParams.type) {
+      this.errors.push('type Required')
+    }
+    if (!graphParams.color) {
+      this.errors.push('color Required')
+    }
+    return this.errors.length == 0;
   }
+}
 
+@Component({
+  components: {
+    ErrorMessages
+  }
+})
+export default class CreateGraph extends Vue {
+  userParams : UserParams = { 
+    username:'',
+    token:'',
+    };
   graphParams : GraphParams = {
     id: '',
     name: '',
     unit: '',
     type: '',
     color: '',
-    timezone: ''
-  };
+    timezone:'',
+    };
+  
+  apiResult : ApiResult | null = null;
+  errors : string[] = [];
+  private createGraphValidater: CreateGraphValidater = new CreateGraphValidater();
 
   sendParams() {
+    let errorHandler = (error: any) => {
+      this.errors =  [error.message];
+      alert('Not Create Graph!');
+    };
+
+    let successHandler = (response: any) => {
+      alert('Create Graph!');
+    };
+
+    if(!this.createGraphValidater.validate(this.userParams, this.graphParams)) {
+      this.errors = this.createGraphValidater.errors
+      alert('Params Error');
+      return;
+    }
+
     axios.post(
       `https://pixe.la/v1/users/${this.userParams.username}/graphs`, 
       this.graphParams,
@@ -70,12 +126,8 @@ export default class CreateGraph extends Vue {
           }
       }
       )
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .then(successHandler)
+      .catch(errorHandler)
   }
 }
 </script>
