@@ -1,4 +1,5 @@
 # pixela-gui
+[![Build Status](https://travis-ci.com/makowis/pixela-gui.svg?branch=master)](https://travis-ci.com/makowis/pixela-gui)
 
 ## Project setup
 ```
