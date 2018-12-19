@@ -2,7 +2,6 @@
   <div>
     <h1>Create Graph</h1>
     <error-messages v-bind:errors="errors" />
-    <p v-if="error != null">{{error}}</p>
     <label for="username">username</label>
     <input type="text" id="username" v-model="userParams.username">
     <label for="token">token</label>
@@ -105,7 +104,11 @@ export default class CreateGraph extends Vue {
     let errorHandler = (error: any) => {
       this.errors =  [error.message];
       alert('Not Create Graph!');
-    }
+    };
+
+    let successHandler = (response: any) => {
+      alert('Create Graph!');
+    };
 
     if(!this.createGraphValidater.validate(this.userParams, this.graphParams)) {
       this.errors = this.createGraphValidater.errors
@@ -122,9 +125,7 @@ export default class CreateGraph extends Vue {
           }
       }
       )
-      .then(function (response) {
-        console.log(response);
-      })
+      .then(successHandler)
       .catch(errorHandler)
   }
 }
