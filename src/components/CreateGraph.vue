@@ -66,7 +66,7 @@ export default class CreateGraph extends Vue {
       {
         headers: {
           'X-USER-TOKEN': this.userParams.token,
-          'Content-Type': 'application/json',
+          'Accept': 'application/json',
           }
       }
       )
