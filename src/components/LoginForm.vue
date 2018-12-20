@@ -1,19 +1,17 @@
 <template>
   <div>
-    <h1>GET Graph</h1>
+    <h1>Login</h1>
     <label for="username">username</label>
     <input type="text" id="username" v-model="userParams.username">
     <label for="token">token</label>
     <input type="text" id="token" v-model="userParams.token">
-    <button type="button" @click="sendParams">Get Graph</button>
-    <graph-list v-bind:graphs="graphs" />
+    <button type="button" @click="sendParams">Login</button>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import axios,{ AxiosResponse } from 'axios';
-import GraphList from "@/components/GraphList.vue";
 import ErrorMessages from "@/components/ErrorMessages.vue";
 
 interface UserParams {
@@ -21,38 +19,21 @@ interface UserParams {
   token: string,
 }
 
-interface Graph {
-  id: string,
-  name: string,
-  unit: string,
-  type: string,
-  color: string,
-  timezone: string,
-  purgeCacheURLs: string,
-}
-
 @Component({
   components: {
-    GraphList,
     ErrorMessages
   }
 })
-export default class CreateGraph extends Vue {
+export default class LoginForm extends Vue {
   userParams : UserParams = {
     username: '',
     token: '',
   }
 
-  graphs : Graph[] = [];
-
   sendParams() {
     const setResult = (response: AxiosResponse<any>) => {
-      this.graphs = response.data.graphs;
+      this.$store.dispatch('user/setUser', this.userParams);
     };
-
-    console.log(this.$store.getters.user);
-    this.$store.dispatch('user/setUser', this.userParams);
-    console.log(this.$store.getters['user/user']);
 
     axios.get(
       `https://pixe.la/v1/users/${this.userParams.username}/graphs`,
@@ -64,7 +45,7 @@ export default class CreateGraph extends Vue {
       )
       .then(setResult)
       .catch(function (error) {
-        console.log(error);
+        alert('Not Login');
       });
   }
 

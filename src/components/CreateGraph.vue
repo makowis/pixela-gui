@@ -3,9 +3,9 @@
     <h1>Create Graph</h1>
     <error-messages v-bind:errors="errors" />
     <label for="username">username</label>
-    <input type="text" id="username" v-model="userParams.username">
+    <input type="text" id="username" v-model="user.username">
     <label for="token">token</label>
-    <input type="text" id="token" v-model="userParams.token">
+    <input type="text" id="token" v-model="user.token">
     <label for="id">id</label>
     <input type="text" id="id" v-model="graphParams.id">
     <label for="name">name</label>
@@ -26,6 +26,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import axios from 'axios';
 import ErrorMessages from "@/components/ErrorMessages.vue";
+import { mapGetters } from 'vuex';
 
 interface UserParams {
   username: string;
@@ -78,6 +79,11 @@ class CreateGraphValidater {
 }
 
 @Component({
+  computed: {
+    ...mapGetters({
+      user: 'user/user'
+    })
+  },
   components: {
     ErrorMessages
   }

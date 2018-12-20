@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <login-form />
     <create-graph />
     <get-graph />
   </div>
@@ -7,11 +8,13 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import LoginForm from "@/components/LoginForm.vue";
 import CreateGraph from "@/components/CreateGraph.vue";
 import GetGraph from "@/components/GetGraph.vue";
 
 @Component({
   components: {
+    LoginForm,
     CreateGraph,
     GetGraph
   }
