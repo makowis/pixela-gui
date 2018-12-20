@@ -33,6 +33,7 @@ export default class LoginForm extends Vue {
   sendParams() {
     const setResult = (response: AxiosResponse<any>) => {
       this.$store.dispatch('user/setUser', this.userParams);
+      this.$router.replace('/');
     };
 
     axios.get(

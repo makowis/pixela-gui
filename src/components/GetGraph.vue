@@ -1,11 +1,6 @@
 <template>
   <div>
-    <h1>GET Graph</h1>
-    <label for="username">username</label>
-    <input type="text" id="username" v-model="userParams.username">
-    <label for="token">token</label>
-    <input type="text" id="token" v-model="userParams.token">
-    <button type="button" @click="sendParams">Get Graph</button>
+    <h2>Graphs</h2>
     <graph-list v-bind:graphs="graphs" />
   </div>
 </template>
@@ -38,27 +33,25 @@ interface Graph {
   }
 })
 export default class CreateGraph extends Vue {
-  userParams : UserParams = {
-    username: '',
-    token: '',
-  }
 
   graphs : Graph[] = [];
+
+  created() {
+    this.sendParams();
+  }
 
   sendParams() {
     const setResult = (response: AxiosResponse<any>) => {
       this.graphs = response.data.graphs;
     };
 
-    console.log(this.$store.getters.user);
-    this.$store.dispatch('user/setUser', this.userParams);
-    console.log(this.$store.getters['user/user']);
+    let user: any = this.$store.getters['user/user'];
 
     axios.get(
-      `https://pixe.la/v1/users/${this.userParams.username}/graphs`,
+      `https://pixe.la/v1/users/${user.username}/graphs`,
       {
         headers: {
-          'X-USER-TOKEN': this.userParams.token
+          'X-USER-TOKEN': user.token
           }
       }
       )

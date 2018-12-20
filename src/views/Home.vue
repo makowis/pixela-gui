@@ -1,7 +1,5 @@
 <template>
   <div class="home">
-    <login-form />
-    <create-graph />
     <get-graph />
   </div>
 </template>
@@ -13,6 +11,13 @@ import CreateGraph from "@/components/CreateGraph.vue";
 import GetGraph from "@/components/GetGraph.vue";
 
 @Component({
+  created() {
+    let user = this.$store.getters['user/user'];
+    if (!user.username || !user.token) {
+      this.$router.replace('/login');
+    }
+
+  },
   components: {
     LoginForm,
     CreateGraph,
