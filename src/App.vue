@@ -61,8 +61,14 @@ main {
 
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=VT323');
 body {
+  font-family: 'VT323', monospace;
   margin: 0;
   padding: 0;
+}
+
+button {
+  font-family: 'VT323', monospace;
 }
 </style>
