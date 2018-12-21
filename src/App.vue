@@ -6,14 +6,18 @@
         Pixela GUI
       </h1>
       <ul>
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/create">New Graph</router-link></li>
+        <li>
+          <router-link to="/">
+            <font-awesome-icon icon="home" class="icon"/>Home
+          </router-link></li>
+        <li>
+          <router-link to="/create">
+            <font-awesome-icon icon="pencil-alt" class="icon"/>New Graph
+          </router-link>
+        </li>
       </ul>
     </nav>
     <main>
-      <span style="font-size: 3em; color: Tomato;">
-        <i class="fas fa-igloo"></i>
-      </span>
       <router-view />
     </main>
   </div>
@@ -56,6 +60,11 @@ nav ul li a {
 
 main {
   padding: 0px 20px;
+}
+
+.icon {
+  font-size: small;
+  margin-right: 2px;
 }
 </style>
 
