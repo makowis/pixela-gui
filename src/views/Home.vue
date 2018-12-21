@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h2>Graphs</h2>
-    <graph-list v-bind:graphs="graphs" />
+    <graph-list :graphs="graphs" :username="user.username" />
   </div>
 </template>
 
@@ -10,6 +10,11 @@ import { Component, Vue } from "vue-property-decorator";
 import axios,{ AxiosResponse } from 'axios';
 import GraphList from "@/components/GraphList.vue";
 import ErrorMessages from "@/components/ErrorMessages.vue";
+
+interface User {
+  username: string,
+  token: string
+}
 
 interface Graph {
   id: string,
@@ -31,9 +36,12 @@ export default class Home extends Vue {
 
   graphs : Graph[] = [];
   
+  private get user(): User {
+    return this.$store.getters['user/user'];
+  }
+  
   created() {
-    let user = this.$store.getters['user/user'];
-    if (!user.username || !user.token) {
+    if (!this.user.username || !this.user.token) {
       this.$router.replace('/login');
     } else {
       this.sendParams();
@@ -45,13 +53,11 @@ export default class Home extends Vue {
       this.graphs = response.data.graphs;
     };
 
-    let user: any = this.$store.getters['user/user'];
-
     axios.get(
-      `https://pixe.la/v1/users/${user.username}/graphs`,
+      `https://pixe.la/v1/users/${this.user.username}/graphs`,
       {
         headers: {
-          'X-USER-TOKEN': user.token
+          'X-USER-TOKEN': this.user.token
           }
       }
       )

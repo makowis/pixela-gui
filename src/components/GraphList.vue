@@ -10,6 +10,7 @@
           <th>color</th>
           <th>timezone</th>
           <th>purgeCacheURLs</th>
+          <th>detail</th>
         </tr>
       </thead>
       <tbody>
@@ -21,6 +22,11 @@
           <td>{{graph.color}}</td>
           <td>{{graph.timezone}}</td>
           <td>{{graph.purgeCacheURLs}}</td>
+          <td>
+            <a :href="`https://pixe.la/v1/users/${username}/graphs/${graph.id}.html`" target="_blank">
+              LINK
+            </a>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -44,6 +50,9 @@ interface Graph {
 export default class GraphList extends Vue {
   @Prop() private graphs?: Graph[];
 
+  private get username(): string {
+    return this.$store.getters['user/user'].username;
+  }
 }
 </script>
 
