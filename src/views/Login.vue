@@ -8,7 +8,7 @@
     <input type="text" id="token" v-model="userParams.token">
     <button type="button" @click="sendParams">Login</button>
     <p class="pixela-link">
-      <a href="https://pixe.la/" target="_blank">getting started</a>
+      <a href="https://pixe.la/" target="_blank">getting started & create user</a>
     </p>
     
   </div>
