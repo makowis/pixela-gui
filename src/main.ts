@@ -5,7 +5,7 @@ import store from './store';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import "./registerServiceWorker";
+// import "./registerServiceWorker";
 
 library.add(faHome,faPencilAlt)
 
