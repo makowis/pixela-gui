@@ -1,6 +1,7 @@
 <template>
   <div class="login">
     <h2>Login</h2>
+    <error-messages v-bind:errors="errors" />
     <label for="username">username</label>
     <input type="text" id="username" v-model="userParams.username">
     <label for="token">token</label>
@@ -31,7 +32,32 @@ export default class Login extends Vue {
     token: '',
   }
 
-  sendParams() {
+  errors: string[] = [];
+
+  checkForm(e: any) {
+    if(this.userParams.username && this.userParams.token) {
+      return true;
+    }
+
+    this.errors = [];
+
+    if(!this.userParams.username) {
+      this.errors.push("username Required");
+    }
+
+    if(!this.userParams.token) {
+      this.errors.push("token Required");
+    }
+
+    e.preventDefault();
+    return false;
+  }
+
+  sendParams(e: any) {
+    if(!this.checkForm(e)) {
+      return false;
+    }
+
     const setResult = (response: AxiosResponse<any>) => {
       this.$store.dispatch('user/setUser', this.userParams);
       this.$router.replace('/');
