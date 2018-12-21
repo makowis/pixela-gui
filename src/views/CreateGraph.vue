@@ -25,7 +25,10 @@
       <option>kuro</option>
     </select>
     <label for="timezone">timezone</label>
-    <input type="text" id="timezone" v-model="graphParams.timezone">
+    <select id="timezone" v-model="graphParams.timezone">
+      <option value=""></option>
+      <option>Asia/Tokyo</option>
+    </select>
     <button type="button" @click="sendParams">Create</button>
   </div>
 </template>
@@ -159,7 +162,13 @@ input {
   width: 100%;
   padding: 5px;
   margin-bottom: 15px;
-  border: 1px solid black;
+  border: 1px solid gray;
+}
+
+select {
+  display: block;
+  margin-bottom: 15px;
+  width: 100%;
 }
 
 button {
