@@ -1,19 +1,22 @@
 <template>
-  <div>
-    <h1>GET Graph</h1>
+  <div class="login">
+    <h2>Login</h2>
+    <error-messages v-bind:errors="errors" />
     <label for="username">username</label>
     <input type="text" id="username" v-model="userParams.username">
     <label for="token">token</label>
     <input type="text" id="token" v-model="userParams.token">
-    <button type="button" @click="sendParams">Get Graph</button>
-    <graph-list v-bind:graphs="graphs" />
+    <button type="button" @click="sendParams">Login</button>
+    <p class="pixela-link">
+      <a href="https://pixe.la/" target="_blank">getting started & create user</a>
+    </p>
+    
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import axios,{ AxiosResponse } from 'axios';
-import GraphList from "@/components/GraphList.vue";
 import ErrorMessages from "@/components/ErrorMessages.vue";
 
 interface UserParams {
@@ -21,33 +24,47 @@ interface UserParams {
   token: string,
 }
 
-interface Graph {
-  id: string,
-  name: string,
-  unit: string,
-  type: string,
-  color: string,
-  timezone: string,
-  purgeCacheURLs: string,
-}
-
 @Component({
   components: {
-    GraphList,
     ErrorMessages
   }
 })
-export default class CreateGraph extends Vue {
+export default class Login extends Vue {
+
   userParams : UserParams = {
     username: '',
     token: '',
   }
 
-  graphs : Graph[] = [];
+  errors: string[] = [];
 
-  sendParams() {
+  checkForm(e: any) {
+    if(this.userParams.username && this.userParams.token) {
+      return true;
+    }
+
+    this.errors = [];
+
+    if(!this.userParams.username) {
+      this.errors.push("username Required");
+    }
+
+    if(!this.userParams.token) {
+      this.errors.push("token Required");
+    }
+
+    e.preventDefault();
+    return false;
+  }
+
+  sendParams(e: any) {
+    if(!this.checkForm(e)) {
+      return false;
+    }
+
     const setResult = (response: AxiosResponse<any>) => {
-      this.graphs = response.data.graphs;
+      this.$store.dispatch('user/setUser', this.userParams);
+      this.$router.replace('/');
     };
 
     axios.get(
@@ -60,14 +77,17 @@ export default class CreateGraph extends Vue {
       )
       .then(setResult)
       .catch(function (error) {
-        console.log(error);
+        alert('Not Login');
       });
   }
-
 }
 </script>
 
 <style scoped>
+.pixela-link a {
+  color: green;
+}
+
 label{
   display: block;
   font-weight: bold;

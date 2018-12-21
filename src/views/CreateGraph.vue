@@ -1,11 +1,8 @@
 <template>
   <div>
     <h1>Create Graph</h1>
+    <router-link to="/">home</router-link>
     <error-messages v-bind:errors="errors" />
-    <label for="username">username</label>
-    <input type="text" id="username" v-model="userParams.username">
-    <label for="token">token</label>
-    <input type="text" id="token" v-model="userParams.token">
     <label for="id">id</label>
     <input type="text" id="id" v-model="graphParams.id">
     <label for="name">name</label>
@@ -83,10 +80,14 @@ class CreateGraphValidater {
   }
 })
 export default class CreateGraph extends Vue {
-  userParams : UserParams = { 
-    username:'',
-    token:'',
-    };
+  created() {
+    let user = this.$store.getters['user/user'];
+    if (!user.username || !user.token) {
+      this.$router.replace('/login');
+    }
+
+  }
+
   graphParams : GraphParams = {
     id: '',
     name: '',
@@ -95,8 +96,7 @@ export default class CreateGraph extends Vue {
     color: '',
     timezone:'',
     };
-  
-  apiResult : ApiResult | null = null;
+
   errors : string[] = [];
   private createGraphValidater: CreateGraphValidater = new CreateGraphValidater();
 
@@ -107,21 +107,24 @@ export default class CreateGraph extends Vue {
     };
 
     let successHandler = (response: any) => {
+      this.$router.replace('/');
       alert('Create Graph!');
     };
 
-    if(!this.createGraphValidater.validate(this.userParams, this.graphParams)) {
+    let user: any = this.$store.getters['user/user'];
+
+    if(!this.createGraphValidater.validate(user, this.graphParams)) {
       this.errors = this.createGraphValidater.errors
       alert('Params Error');
       return;
     }
 
     axios.post(
-      `https://pixe.la/v1/users/${this.userParams.username}/graphs`, 
+      `https://pixe.la/v1/users/${user.username}/graphs`, 
       this.graphParams,
       {
         headers: {
-          'X-USER-TOKEN': this.userParams.token,
+          'X-USER-TOKEN': user.token,
           'Accept': 'application/json',
           }
       }
