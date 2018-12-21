@@ -7,7 +7,19 @@
       "**/node_modules/**"
     ],
     "headers": [
-      {"source": "/service-worker.js", "headers": [{"key": "Cache-Control", "value": "no-cache"}]}
+      {
+        "source": "/service-worker.js",
+        "headers": [
+          {
+            "key" : "Access-Control-Allow-Origin",
+            "value" : "*"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
     ]
   }
 }

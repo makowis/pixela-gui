@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Create Graph</h1>
-    <router-link to="/">home</router-link>
+    <a href="https://docs.pixe.la/#/post-graph">api reference</a>
     <error-messages v-bind:errors="errors" />
     <label for="id">id</label>
     <input type="text" id="id" v-model="graphParams.id">
@@ -10,9 +10,20 @@
     <label for="unit">unit</label>
     <input type="text" id="unit" v-model="graphParams.unit">
     <label for="type">type</label>
-    <input type="text" id="type" v-model="graphParams.type">
+    <select id="type" v-model="graphParams.type">
+      <option disabled value="">Please select one</option>
+      <option>int</option>
+      <option>float</option>
+    </select>
     <label for="color">color</label>
-    <input type="text" id="color" v-model="graphParams.color">
+    <select id="color" v-model="graphParams.color">
+      <option disabled value="">Please select one</option>
+      <option>shibafu</option>
+      <option>momiji</option>
+      <option>sora</option>
+      <option>ajisai</option>
+      <option>kuro</option>
+    </select>
     <label for="timezone">timezone</label>
     <input type="text" id="timezone" v-model="graphParams.timezone">
     <button type="button" @click="sendParams">Create</button>
@@ -162,5 +173,9 @@ button {
   background-color: rgb(0, 132, 255); 
   font-size: large;
   border-radius: 5px;
+}
+
+a {
+  color: green;
 }
 </style>

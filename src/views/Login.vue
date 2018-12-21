@@ -5,7 +5,7 @@
     <label for="username">username</label>
     <input type="text" id="username" v-model="userParams.username">
     <label for="token">token</label>
-    <input type="text" id="token" v-model="userParams.token">
+    <input type="password" id="token" v-model="userParams.token">
     <button type="button" @click="sendParams">Login</button>
     <p class="pixela-link">
       <a href="https://pixe.la/" target="_blank">getting started & create user</a>
