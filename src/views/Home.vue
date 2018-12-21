@@ -8,13 +8,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import axios, { AxiosResponse } from "axios";
+import { getGraphDefinitions } from "@/api/graphApi";
 import GraphList from "@/components/GraphList.vue";
 import ErrorMessages from "@/components/ErrorMessages.vue";
-
-interface User {
-  username: string;
-  token: string;
-}
+import { User } from "@/types/user";
 
 interface Graph {
   id: string;
@@ -56,14 +53,7 @@ export default class Home extends Vue {
       alert("error");
     };
 
-    axios
-      .get(`https://pixe.la/v1/users/${this.user.username}/graphs`, {
-        headers: {
-          "X-USER-TOKEN": this.user.token
-        }
-      })
-      .then(setResult)
-      .catch(errorHandler);
+    getGraphDefinitions(this.user, setResult, errorHandler);
   }
 }
 </script>

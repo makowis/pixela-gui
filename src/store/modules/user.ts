@@ -1,10 +1,7 @@
+import { User } from "@/types/user";
+
 interface UserState {
   user: User
-}
-
-interface User {
-  username: string,
-  token: string
 }
 
 const state: UserState = {

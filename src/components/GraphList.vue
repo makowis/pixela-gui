@@ -11,6 +11,7 @@
           <th>timezone</th>
           <th>purgeCacheURLs</th>
           <th>detail</th>
+          <th>delete</th>
         </tr>
       </thead>
       <tbody>
@@ -27,6 +28,9 @@
               LINK
             </a>
           </td>
+          <td>
+            <button v-on:click="deleteGrahp(graph.id)">delete</button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -35,6 +39,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import axios, { AxiosResponse } from 'axios';
+import { getGraphDefinitions } from "@/api/graphApi";
+
+interface User {
+  username: string;
+  token: string;
+}
 
 interface Graph {
   id: string,
@@ -50,8 +61,50 @@ interface Graph {
 export default class GraphList extends Vue {
   @Prop() private graphs?: Graph[];
 
+  private get user(): User {
+    return this.$store.getters["user/user"];
+  }
+
   private get username(): string {
     return this.$store.getters['user/user'].username;
+  }
+
+  errors : string[] = [];
+
+  deleteGrahp(id: string) {
+    if(!confirm(`Do you really want to delete this graph? [id:${id}]`)) {
+      return false;
+    }
+
+    let errorHandler = (error: any) => {
+      this.errors =  [error.message];
+      alert('Not Delete Graph!');
+    };
+
+    let successHandler = (response: any) => {      
+      getGraphDefinitions(this.user, 
+        (response: AxiosResponse<any>) => {
+          this.graphs = response.data.graphs;
+          alert('Delete Graph!');
+        },
+        (error: any) => {
+          this.errors =  [error.message];
+          alert("error");        
+        }
+      );
+    };
+
+    axios.delete(
+      `https://pixe.la/v1/users/${this.user.username}/graphs/${id}`, 
+      {
+        headers: {
+          'X-USER-TOKEN': this.user.token,
+          'Accept': 'application/json',
+          }
+      }
+      )
+      .then(successHandler)
+      .catch(errorHandler)
   }
 }
 </script>

@@ -96,8 +96,7 @@ export default class CreateGraph extends Vue {
     color: '',
     timezone:'',
     };
-  
-  apiResult : ApiResult | null = null;
+
   errors : string[] = [];
   private createGraphValidater: CreateGraphValidater = new CreateGraphValidater();
 
