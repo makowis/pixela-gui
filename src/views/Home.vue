@@ -7,23 +7,23 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import axios,{ AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from "axios";
 import GraphList from "@/components/GraphList.vue";
 import ErrorMessages from "@/components/ErrorMessages.vue";
 
 interface User {
-  username: string,
-  token: string
+  username: string;
+  token: string;
 }
 
 interface Graph {
-  id: string,
-  name: string,
-  unit: string,
-  type: string,
-  color: string,
-  timezone: string,
-  purgeCacheURLs: string,
+  id: string;
+  name: string;
+  unit: string;
+  type: string;
+  color: string;
+  timezone: string;
+  purgeCacheURLs: string;
 }
 
 @Component({
@@ -33,16 +33,15 @@ interface Graph {
   }
 })
 export default class Home extends Vue {
+  graphs: Graph[] = [];
 
-  graphs : Graph[] = [];
-  
   private get user(): User {
-    return this.$store.getters['user/user'];
+    return this.$store.getters["user/user"];
   }
-  
+
   created() {
     if (!this.user.username || !this.user.token) {
-      this.$router.replace('/login');
+      this.$router.replace("/login");
     } else {
       this.sendParams();
     }
@@ -53,24 +52,24 @@ export default class Home extends Vue {
       this.graphs = response.data.graphs;
     };
 
-    axios.get(
-      `https://pixe.la/v1/users/${this.user.username}/graphs`,
-      {
+    const errorHandler = (error: any) => {
+      alert("error");
+    };
+
+    axios
+      .get(`https://pixe.la/v1/users/${this.user.username}/graphs`, {
         headers: {
-          'X-USER-TOKEN': this.user.token
-          }
-      }
-      )
+          "X-USER-TOKEN": this.user.token
+        }
+      })
       .then(setResult)
-      .catch(function (error) {
-        console.log(error);
-      });
+      .catch(errorHandler);
   }
 }
 </script>
 
 <style scoped>
-label{
+label {
   display: block;
   font-weight: bold;
   margin-bottom: 5px;
@@ -93,9 +92,8 @@ button {
   font-weight: bold;
   padding: 5px 10px;
   color: white;
-  background-color: rgb(0, 132, 255); 
+  background-color: rgb(0, 132, 255);
   font-size: large;
   border-radius: 5px;
 }
 </style>
-
